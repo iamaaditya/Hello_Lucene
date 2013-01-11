@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<!
+	Project	:		Lucened Enabled Simple Text Search
+	Author	:		Aaditya Prakash
+	Date	:		25- Sep-2012 16:21
+-->
+ 
+<%@ page import="SearchWebCall" %>
+ 
+<html>
+ 
+<head>
+	<title> Lucene Enabled Simple Text Search </title>
+ 
+	<script type="text/javascript">
+ 
+	<!-- Validation to prevent some characters, 
+	currently Lucene Doesn't parse these characters -->
+			function isSpclChar(){
+				var iChars = "!@#^&amp;*()+=-[]\\\';,./{}|~`\":<>?";
+				for (var i = 0; i < document.lucene.input.value.length; i++) {
+					if (iChars.indexOf(document.lucene.input.value.charAt(i)) != -1) {
+						//throwback the unallowed character
+						document.lucene.input.value = document.lucene.input.value.slice(0,-1);
+						return false;
+					}
+				}
+			}
+ 
+	</script>
+ 
+</head>
+ 
+<body>
+ 
+<h1>Lucene Enabled Simple Text Search </h1>
+ 
+<form name="lucene" action="index.jsp" method="get">
+		<input name="input" size="30" id="input" onkeyup="isSpclChar()"/>
+		<br />
+		<input type="submit" value="Search" />
+</form>
+ 
+<br />
+ 
+<%
+	String searchString[] = new String[2];
+	String result[] = new String[100];
+	searchString[0] = "-query";
+	searchString[1] = request.getParameter("input");
+ 
+	if(searchString[1] != null) {
+		// send the Search term to obtain the result, 
+		//all processing happens in the class 
+		//(keeping jsp code to minimum)
+		result = SearchWebCall.filter(searchString);
+		int noOfMatch=0;
+ 
+		out.print("Search Result of : <b>" + searchString[1] + "</b></br></br>");
+		for(int i=0; i< result.length; i++){
+ 
+			//format the results
+			if (result[i] != null) {
+				out.print(i+1 + ". ");
+				//results are displayed as hyperlinks to faciliate information retrieval
+				out.print("<a href=\""+result[i]+"\">"+result[i]+"</a>");
+				out.print("<br />");
+				noOfMatch++;
+			}
+		}
+		out.print("<h2><p> No. of Matches: " + noOfMatch+ " </h2>");
+	}
+//end of JSP
+%>
+</body>
+</html>

@@ -1,0 +1,1 @@
+This is a basic hello world demonstration of Lucene. Please see http://aaditya.info/blog/2012/10/hello-lucene-world-web-implementation/ for more details.
